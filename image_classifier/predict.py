@@ -1,11 +1,11 @@
 from argparse import ArgumentParser
-from flower_classifier import FlowerClassifier
+from flower_classifier import ImageRecognizer
 
 class Predict:
 
     @staticmethod
     def restore_model(check_point_path, category_names_path, use_gpu):
-        flowerc = FlowerClassifier(check_point_path, category_names_path, use_gpu)
+        flowerc = ImageRecognizer(check_point_path, category_names_path, use_gpu)
         return flowerc
 
     def topk(image_path, check_point_path, category_names_path, topk, use_gpu):

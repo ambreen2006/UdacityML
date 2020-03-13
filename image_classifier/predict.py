@@ -9,8 +9,8 @@ class Predict:
         return flowerc
 
     def topk(image_path, check_point_path, category_names_path, topk, use_gpu):
-        flowerc = Predict.restore_model(check_point_path, category_names_path)
-        flowerc.topk(image_path, topk, use_gpu)
+        flowerc = Predict.restore_model(check_point_path, category_names_path, use_gpu)
+        return flowerc.topk(image_path, topk)
 
     def predict(image_path, check_point_path, category_names_path, use_gpu):
         flowerc = Predict.restore_model(check_point_path, category_names_path, use_gpu)
@@ -28,10 +28,11 @@ def main():
     args = parser.parse_args()
     
     if args.topk:
-        self.topk(args.image_path, args.check_point, args.category_names,  args.topk, args.gpu)
+        probs, indices, names = Predict.topk(args.image_path, args.check_point, args.category_names,  args.topk, args.gpu)
+        print("Probabilities = {}, Class Indices = {}, Names = {}".format(probs, indices, names))
     else:
         prob, index, name = Predict.predict(args.image_path, args.check_point, args.category_names, args.gpu)
-        print("Probability = {}, Index = {}, Name = {}".format( prob, index, name))
+        print("Probability = {}, Class Index = {}, Name = {}".format( prob, index, name))
 
 if __name__ == "__main__":
     main()

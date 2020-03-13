@@ -71,20 +71,20 @@ class ImageRecognizer():
         image = self.valid_transforms(image).unsqueeze_(0)
         return image.to("cuda" if self.gpu else "cpu")
 
-    def topk(self, image_path, k, use_gpu):
-        img = self.process_image(image_path, use_gpu)
+    def topk(self, image_path, k):
+        img = self.process_image(image_path)
 
         with torch.no_grad():
             output = self.model(img)
             output_ps = torch.exp(output)
             prob, indices = output_ps.topk(k)
 
-        prob = prob.numpy()[0]
-        indices = indices.numpy()[0]
+        prob = prob.cpu().numpy()[0]
+        indices = indices.cpu().numpy()[0]
 
         flower_classes = [self.idx_to_classes[x] for x in indices]
         flower_names = [self.cat_to_name[x] for x in flower_classes]
-        print(flower_names, prob)
+        return prob, flower_classes, flower_names
 
     def predict(self, image_path):
         img = self.process_image(image_path)
